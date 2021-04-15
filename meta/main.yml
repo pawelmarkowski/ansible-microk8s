@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  role_name: microk8s-install
+  author: Paweł Markowski
+  description: MicroK8s installer
+  company: Mtechnology, Inc.
+  issue_tracker_url: "https://github.com/pawelmarkowski/ansible-microk8s/issues"
+
+  license: Proprietary
+  min_ansible_version: 2.7
+
+  platforms:
+    - name: Any
+      versions:
+        - Any
+
+dependencies: []

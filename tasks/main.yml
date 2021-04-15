@@ -1,0 +1,4 @@
+---
+- import_tasks: "01_prepare.yml"
+  tags:
+    - microk8s-prepare
