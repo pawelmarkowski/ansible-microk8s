@@ -1,4 +1,8 @@
 ---
+- set_fact:
+    certbot: "{{ microk8s | combine(microk8s_overwrite, recursive=True) }}"
+  when: microk8s_overwrite is defined
+
 - name: sudo snap install microk8s --classic
   snap:
     name: microk8s
@@ -12,3 +16,4 @@
 - name: enable microk8s modules
   shell: microk8s enable {{microk8s['enable']}}
   become: yes
+  when: microk8s['enable'] is defined
