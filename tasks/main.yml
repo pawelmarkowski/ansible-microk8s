@@ -2,3 +2,7 @@
 - import_tasks: "01_prepare.yml"
   tags:
     - microk8s-prepare
+
+- import_tasks: "03_configure.yml"
+  tags:
+    - microk8s-configure

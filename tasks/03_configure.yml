@@ -1,0 +1,8 @@
+---
+- set_fact:
+    certbot: "{{ microk8s | combine(microk8s_overwrite, recursive=True) }}"
+  when: microk8s_overwrite is defined
+
+- name: enable kubectl autocompletion
+  shell: kubectl completion bash > /etc/bash_completion.d/kubectl
+  become: yes

@@ -17,3 +17,8 @@
   shell: microk8s enable {{microk8s['enable']}}
   become: yes
   when: microk8s['enable'] is defined
+
+- name: install bash autocomplete
+  apt:
+    name: bash-completion
+    state: present
