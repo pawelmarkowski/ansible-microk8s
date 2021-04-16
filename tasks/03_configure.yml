@@ -6,3 +6,8 @@
 - name: enable kubectl autocompletion
   shell: kubectl completion bash > /etc/bash_completion.d/kubectl
   become: yes
+
+- name: show message source bashrc
+  ansible.builtin.debug:
+    msg:
+      - if kubectl autocomplete does not work in terminal session use `source ~/.bashrc` to enable it
