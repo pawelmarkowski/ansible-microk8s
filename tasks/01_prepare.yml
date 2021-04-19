@@ -8,6 +8,7 @@
     name:
       - microk8s
       - kubectl
+      - helm3
     classic: yes
   become: yes
 
