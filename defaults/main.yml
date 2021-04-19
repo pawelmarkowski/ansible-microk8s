@@ -1,3 +1,3 @@
 ---
 microk8s:
-  enable: "dns helm prometheus registry storage"
+  enable: "dns helm3 prometheus registry storage"
