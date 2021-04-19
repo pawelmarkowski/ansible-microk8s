@@ -1,3 +1,7 @@
 ---
 microk8s:
   enable: "dns helm3 prometheus registry storage"
+  helm:
+    #https://github.com/helm/helm/releases
+    src: https://get.helm.sh/helm-v3.5.4-linux-amd64.tar.gz
+    checksum: a8ddb4e30435b5fd45308ecce5eaad676d64a5de9c89660b56face3fe990b318

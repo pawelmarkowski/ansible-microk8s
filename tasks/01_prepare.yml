@@ -8,9 +8,26 @@
     name:
       - microk8s
       - kubectl
-      - helm3
     classic: yes
   become: yes
+
+- name: download helm from {{microk8s['helm']['src']}}
+  ansible.builtin.unarchive:
+    src: "{{microk8s['helm']['src']}}"
+    dest: /tmp/helm3.tar.gz
+    remote_src: yes
+    checksum: "{{microk8s['helm']['checksum']}}"
+
+- name: install helm3
+  ansible.builtin.unarchive:
+    src: /tmp/helm3.tar.gz
+    dest: /usr/local/bin/helm3
+    mode: 0755
+
+- name: remove helm from /tmp
+  ansible.builtin.file:
+    path: /tmp/helm3.tar.gz
+    state: absent
 
 - name: wait for microk8s
   shell: microk8s status --wait-ready
