@@ -5,7 +5,9 @@
 
 - name: sudo snap install microk8s --classic
   snap:
-    name: microk8s
+    name:
+      - microk8s
+      - kubectl
     classic: yes
   become: yes
 
