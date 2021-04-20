@@ -1,6 +1,6 @@
 ---
 - set_fact:
-    certbot: "{{ microk8s | combine(microk8s_overwrite, recursive=True) }}"
+    microk8s: "{{ microk8s | combine(microk8s_overwrite, recursive=True) }}"
   when: microk8s_overwrite is defined
 
 - name: sudo snap install microk8s --classic
@@ -11,23 +11,43 @@
     classic: yes
   become: yes
 
-- name: download helm from {{microk8s['helm']['src']}}
-  ansible.builtin.unarchive:
-    src: "{{microk8s['helm']['src']}}"
-    dest: /tmp/helm3.tar.gz
-    remote_src: yes
-    checksum: "{{microk8s['helm']['checksum']}}"
-
 - name: install helm
-  ansible.builtin.unarchive:
-    src: /tmp/helm3.tar.gz
-    dest: /usr/local/bin/helm
-    mode: 0755
+  block:
+    - name: create temporary download directory
+      tempfile:
+        state: directory
+        suffix: helm
+      register: helm_dir
 
-- name: remove helm from /tmp
-  ansible.builtin.file:
-    path: /tmp/helm3.tar.gz
-    state: absent
+    - name: download helm from {{microk8s['helm']['src']}}
+      get_url:
+        url: "{{microk8s['helm']['src']}}"
+        dest: "{{helm_dir.path}}/helm3.tar.gz"
+        remote_src: yes
+        checksum: "{{microk8s['helm']['checksum']}}"
+      register: helm_tar
+
+    - name: unarchive helm
+      ansible.builtin.unarchive:
+        src: "{{helm_tar.dest}}"
+        dest: "{{helm_dir.path}}"
+        mode: 0700
+
+    - name: copy helm to bin
+      ansible.builtin.copy:
+        src: "{{helm_dir.path}}/linux-amd64/helm"
+        dest: /usr/local/bin/helm
+        owner: root
+        group: root
+        mode: "0755"
+        backup: no
+      become: yes
+  always:
+    - name: remove temp directory {{helm_dir.path}}
+      ansible.builtin.file:
+        path: "{{helm_dir.path}}"
+        state: absent
+      ignore_errors: yes
 
 - name: wait for microk8s
   shell: microk8s status --wait-ready
